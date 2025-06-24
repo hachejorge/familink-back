@@ -14,6 +14,11 @@ function mapToPrismaPersonData(person) {
     };
 }
 
+function cleanPerson(person) {
+    const { id, ...rest } = person;
+    return rest;
+}
+
 // Crear hijo/a
 export async function createChild(referenceId, newPerson) {
     const parent = await prisma.person.findUnique({ where: { id: referenceId } });
@@ -24,7 +29,7 @@ export async function createChild(referenceId, newPerson) {
 
     const child = await prisma.person.create({
         data: {
-            ...mapToPrismaPersonData(newPerson),
+            ...mapToPrismaPersonData(cleanPerson(newPerson)),
             motherId: isMother ? parent.id : parent.spouseId || undefined,
             fatherId: isFather ? parent.id : parent.spouseId || undefined,
         },
@@ -40,7 +45,7 @@ export async function createSibling(referenceId, newPerson) {
 
     const sibling = await prisma.person.create({
         data: {
-            ...mapToPrismaPersonData(newPerson),
+            ...mapToPrismaPersonData(cleanPerson(newPerson)),
             motherId: reference.motherId,
             fatherId: reference.fatherId,
         },
@@ -65,7 +70,7 @@ export async function createMother(referenceId, newPerson) {
 
     const mother = await prisma.person.create({
         data: {
-            ...mapToPrismaPersonData(newPerson),
+            ...mapToPrismaPersonData(cleanPerson(newPerson)),
             gender: "F",
             spouseId: spouseId,
         },
@@ -103,7 +108,7 @@ export async function createFather(referenceId, newPerson) {
 
     const father = await prisma.person.create({
         data: {
-            ...mapToPrismaPersonData(newPerson),
+            ...mapToPrismaPersonData(cleanPerson(newPerson)),
             gender: "M",
             spouseId: spouseId,
         },
@@ -129,7 +134,7 @@ export async function createFather(referenceId, newPerson) {
 export async function createSpouse(referenceId, newPerson) {
     const createdSpouse = await prisma.person.create({
         data: {
-            ...mapToPrismaPersonData(newPerson),
+            ...mapToPrismaPersonData(cleanPerson(newPerson)),
             spouseId: referenceId,
         },
     });
@@ -145,6 +150,6 @@ export async function createSpouse(referenceId, newPerson) {
 // Crear raíz sin relaciones
 export async function createRoot(newPerson) {
     return await prisma.person.create({
-        data: newPerson,
+        data: mapToPrismaPersonData(cleanPerson(newPerson)),
     });
 }

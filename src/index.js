@@ -4,7 +4,7 @@ import { authenticateToken } from "./utils/authMiddleware.js";
 
 const app = express();
 
-app.use(cors({ origin: "http://localhost:4200" }));
+app.use(cors({ origin: ["http://localhost:4200", "https://familink.onrender.com"] }));
 
 app.use(express.json());
 
