@@ -5,6 +5,7 @@ import {
     getSiblings,
     getFirstCousins,
     getSecondCousins,
+    getBirthDatesAlive,
 } from "../utils/person.js"; // Asegúrate de que esta función esté definida en utils
 
 const router = Router();
@@ -121,6 +122,16 @@ router.get("/cousins2grade/:id", async (req, res) => {
     try {
         const cousins = await getSecondCousins(personId);
         res.json(cousins);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Server error" });
+    }
+});
+
+router.get("/birthdates", async (req, res) => {
+    try {
+        const birthDates = await getBirthDatesAlive();
+        res.json(birthDates);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "Server error" });

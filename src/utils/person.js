@@ -215,4 +215,27 @@ async function getSecondCousins(personId) {
     }));
 }
 
-export { getPersonDetails, getSiblings, getFirstCousins, getSecondCousins };
+async function getBirthDatesAlive() {
+    const birhtDates = await prisma.person.findMany({
+        where: {
+            isAlive: true,
+            birth: {
+                not: null,
+            },
+        },
+        select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            imageUrl: true,
+            birth: true,
+        },
+        orderBy: {
+            birth: "desc",
+        },
+    });
+
+    return birhtDates;
+}
+
+export { getPersonDetails, getSiblings, getFirstCousins, getSecondCousins, getBirthDatesAlive };
