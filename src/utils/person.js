@@ -235,7 +235,13 @@ async function getBirthDatesAlive() {
         },
     });
 
-    return birhtDates;
+    return birhtDates.map((birth) => ({
+        id: birth.id,
+        firstName: birth.firstName,
+        lastName: birth.lastName,
+        imageUrl: birth.imageUrl ?? undefined,
+        birthDate: birth.birth,
+    }));
 }
 
 export { getPersonDetails, getSiblings, getFirstCousins, getSecondCousins, getBirthDatesAlive };
