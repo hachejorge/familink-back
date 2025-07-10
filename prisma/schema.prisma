@@ -32,6 +32,8 @@ model Person {
 
   childrenOfFather Person[] @relation("FatherRelation")
   childrenOfMother Person[] @relation("MotherRelation")
+
+  CheraFamily CheraFamily[]
 }
 
 model User {
@@ -40,6 +42,14 @@ model User {
   password  String
   role      Role     @default(GUEST)
   createdAt DateTime @default(now())
+}
+
+model CheraFamily {
+  id           Int     @id @default(autoincrement())
+  name         String  @unique
+  description  String?
+  familyHeadId Int?    @unique
+  familyHead   Person? @relation(fields: [familyHeadId], references: [id])
 }
 
 enum Role {

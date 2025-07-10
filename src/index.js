@@ -8,6 +8,9 @@ app.use(cors({ origin: ["http://localhost:4200", "https://familink.onrender.com"
 
 app.use(express.json());
 
+import cheraFamiliesRoutes from "./routes/cheraFamilies.routes.js";
+app.use("/cherafamilies", cheraFamiliesRoutes);
+
 import authRoutes from "./routes/auth.routes.js";
 app.use(authRoutes);
 
