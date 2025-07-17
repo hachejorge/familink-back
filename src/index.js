@@ -8,9 +8,6 @@ app.use(cors({ origin: ["http://localhost:4200", "https://familink.onrender.com"
 
 app.use(express.json());
 
-import cheraFamiliesRoutes from "./routes/cheraFamilies.routes.js";
-app.use("/cherafamilies", cheraFamiliesRoutes);
-
 import authRoutes from "./routes/auth.routes.js";
 app.use(authRoutes);
 
@@ -28,6 +25,12 @@ app.use(authenticateToken, createRoutes);
 
 import deleteRoutes from "./routes/delete.routes.js";
 app.use(authenticateToken, deleteRoutes);
+
+import cheraFamiliesRoutes from "./routes/cheraFamilies.routes.js";
+app.use("/cherafamilies", authenticateToken, cheraFamiliesRoutes);
+
+import searchRoutes from "./routes/search.routes.js";
+app.use(authenticateToken, searchRoutes);
 
 const PORT = process.env.PORT || 3000;
 

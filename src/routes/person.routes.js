@@ -3,6 +3,7 @@ import { buildAscendantTree, buildDescendantTree } from "../utils/trees.js"; // 
 import {
     getPersonDetails,
     getSiblings,
+    getChildren,
     getFirstCousins,
     getSecondCousins,
     getBirthDatesAlive,
@@ -58,6 +59,7 @@ router.get("/person-details/:id", async (req, res) => {
     try {
         const details = await getPersonDetails(personId);
         const siblings = await getSiblings(personId);
+        const children = await getChildren(personId);
         if (!details) {
             return res.status(404).json({ error: "Person not found" });
         }
@@ -72,7 +74,12 @@ router.get("/person-details/:id", async (req, res) => {
             biography: details.biography,
             gender: details.gender,
             isAlive: details.isAlive,
+            spouseId: details.spouseId,
+            mother: details.mother,
+            father: details.father,
+            spouse: details.spouse,
             siblings: siblings,
+            children: children,
         });
     } catch (error) {
         console.error(error);

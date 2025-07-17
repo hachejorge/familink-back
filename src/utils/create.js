@@ -89,6 +89,14 @@ export async function createMother(referenceId, newPerson) {
         });
     }
 
+    // Actualizar a los hermanos para que tengan la nueva madre
+    if (reference.fatherId) {
+        await prisma.person.updateMany({
+            where: { fatherId: reference.fatherId },
+            data: { motherId: mother.id },
+        });
+    }
+
     return mother;
 }
 
@@ -124,6 +132,14 @@ export async function createFather(referenceId, newPerson) {
         await prisma.person.update({
             where: { id: spouseId },
             data: { spouseId: father.id },
+        });
+    }
+
+    // Actualizar a los hermanos para que tengan el nuevo padre
+    if (reference.motherId) {
+        await prisma.person.updateMany({
+            where: { motherId: reference.motherId },
+            data: { fatherId: father.id },
         });
     }
 

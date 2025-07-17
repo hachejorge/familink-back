@@ -13,6 +13,7 @@ async function getPersonDetails(personId) {
         include: {
             father: true,
             mother: true,
+            spouse: true,
         },
     });
 
@@ -31,6 +32,32 @@ async function getPersonDetails(personId) {
         deathDate: person.death ? formatDateToDDMMYYYY(new Date(person.death)) : null,
         fatherId: person.fatherId ?? null,
         motherId: person.motherId ?? null,
+        spouseId: person.spouseId ?? null,
+
+        mother: person.mother
+            ? {
+                  id: person.mother.id,
+                  firstName: person.mother.firstName,
+                  lastName: person.mother.lastName,
+                  imageUrl: person.mother.imageUrl ?? undefined,
+              }
+            : null,
+        father: person.father
+            ? {
+                  id: person.father.id,
+                  firstName: person.father.firstName,
+                  lastName: person.father.lastName,
+                  imageUrl: person.father.imageUrl ?? undefined,
+              }
+            : null,
+        spouse: person.spouse
+            ? {
+                  id: person.spouse.id,
+                  firstName: person.spouse.firstName,
+                  lastName: person.spouse.lastName,
+                  imageUrl: person.spouse.imageUrl ?? undefined,
+              }
+            : null,
     };
 
     return personData;
@@ -76,6 +103,27 @@ async function getSiblings(personId) {
         firstName: sibling.firstName,
         lastName: sibling.lastName,
         imageUrl: sibling.imageUrl ?? undefined,
+    }));
+}
+
+async function getChildren(personId) {
+    const children = await prisma.person.findMany({
+        where: {
+            OR: [{ fatherId: personId }, { motherId: personId }],
+        },
+        select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            imageUrl: true,
+        },
+    });
+
+    return children.map((child) => ({
+        id: child.id,
+        firstName: child.firstName,
+        lastName: child.lastName,
+        imageUrl: child.imageUrl ?? undefined,
     }));
 }
 
@@ -244,4 +292,11 @@ async function getBirthDatesAlive() {
     }));
 }
 
-export { getPersonDetails, getSiblings, getFirstCousins, getSecondCousins, getBirthDatesAlive };
+export {
+    getPersonDetails,
+    getSiblings,
+    getChildren,
+    getFirstCousins,
+    getSecondCousins,
+    getBirthDatesAlive,
+};
