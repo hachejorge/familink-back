@@ -23,7 +23,11 @@ export async function login(req, res) {
             }
         );
 
-        res.status(200).json({ token });
+        const rootPerson = user.rootPersonId;
+
+        console.log("rootPerson:", rootPerson);
+
+        res.status(200).json({ token, rootPerson });
     } catch (err) {
         console.error("Error en login:", err);
         res.status(500).json({ error: "Error interno del servidor" });

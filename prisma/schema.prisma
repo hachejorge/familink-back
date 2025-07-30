@@ -8,40 +8,38 @@ datasource db {
 }
 
 model Person {
-  id          Int       @id @default(autoincrement())
-  firstName   String
-  lastName    String?
-  birth       DateTime?
-  death       DateTime?
-  imageUrl    String?
-  biography   String?
-  gender      String?
-  isAlive     Boolean?  @default(true)
-  originPlace String?
+  id               Int          @id @default(autoincrement())
+  firstName        String
+  lastName         String?
+  birth            DateTime?
+  death            DateTime?
+  imageUrl         String?
+  biography        String?
+  gender           String?
+  isAlive          Boolean?     @default(true)
+  originPlace      String?
+  spouseId         Int?         @unique
+  fatherId         Int?
+  motherId         Int?
+  CheraFamily      CheraFamily?
+  father           Person?      @relation("FatherRelation", fields: [fatherId], references: [id])
+  childrenOfFather Person[]     @relation("FatherRelation")
+  mother           Person?      @relation("MotherRelation", fields: [motherId], references: [id])
+  childrenOfMother Person[]     @relation("MotherRelation")
+  spouse           Person?      @relation("SpouseRelation", fields: [spouseId], references: [id])
+  spouseOf         Person?      @relation("SpouseRelation")
 
-  // Relaciones conyugales
-  spouseId Int?    @unique
-  spouse   Person? @relation("SpouseRelation", fields: [spouseId], references: [id])
-  spouseOf Person? @relation("SpouseRelation")
-
-  // Relaciones familiares (padres e hijos)
-  fatherId Int?
-  motherId Int?
-  father   Person? @relation("FatherRelation", fields: [fatherId], references: [id])
-  mother   Person? @relation("MotherRelation", fields: [motherId], references: [id])
-
-  childrenOfFather Person[] @relation("FatherRelation")
-  childrenOfMother Person[] @relation("MotherRelation")
-
-  CheraFamily CheraFamily[]
+  User User[]
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  username  String   @unique
-  password  String
-  role      Role     @default(GUEST)
-  createdAt DateTime @default(now())
+  id           Int      @id @default(autoincrement())
+  username     String   @unique
+  password     String
+  role         Role     @default(GUEST)
+  createdAt    DateTime @default(now())
+  rootPersonId Int?
+  rootPerson   Person?  @relation(fields: [rootPersonId], references: [id])
 }
 
 model CheraFamily {
