@@ -16,18 +16,19 @@ export async function login(req, res) {
         if (!valid) return res.status(401).json({ error: "Contraseña incorrecta" });
 
         const token = jwt.sign(
-            { userId: user.id, username: user.username, role: user.role },
+            {
+                userId: user.id,
+                username: user.username,
+                role: user.role,
+                rootPerson: user.rootPersonId,
+            },
             JWT_SECRET,
             {
                 expiresIn: "2h",
             }
         );
 
-        const rootPerson = user.rootPersonId;
-
-        console.log("rootPerson:", rootPerson);
-
-        res.status(200).json({ token, rootPerson });
+        res.status(200).json({ token });
     } catch (err) {
         console.error("Error en login:", err);
         res.status(500).json({ error: "Error interno del servidor" });
