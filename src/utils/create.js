@@ -43,6 +43,10 @@ export async function createSibling(referenceId, newPerson) {
     const reference = await prisma.person.findUnique({ where: { id: referenceId } });
     if (!reference) throw new Error("Persona de referencia no encontrada");
 
+    if (!reference.motherId && !reference.fatherId) {
+        throw new Error("Referencia debe tener madre o padre para crear un hermano/a");
+    }
+
     const sibling = await prisma.person.create({
         data: {
             ...mapToPrismaPersonData(cleanPerson(newPerson)),

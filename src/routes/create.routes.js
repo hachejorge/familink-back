@@ -39,6 +39,9 @@ router.post("/create/sibling/:referenceId", async (req, res) => {
         res.status(201).json(newPerson);
     } catch (error) {
         console.error("Error creating sibling:", error);
+        if (error.message === "Referencia debe tener madre o padre para crear un hermano/a") {
+            return res.status(400).json({ error: error.message });
+        }
         res.status(500).json({ error: "Error creating sibling" });
     }
 });
