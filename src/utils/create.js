@@ -32,6 +32,7 @@ export async function createChild(referenceId, newPerson) {
             ...mapToPrismaPersonData(cleanPerson(newPerson)),
             motherId: isMother ? parent.id : parent.spouseId || undefined,
             fatherId: isFather ? parent.id : parent.spouseId || undefined,
+            familyId: parent.familyId || undefined,
         },
     });
 
@@ -52,6 +53,7 @@ export async function createSibling(referenceId, newPerson) {
             ...mapToPrismaPersonData(cleanPerson(newPerson)),
             motherId: reference.motherId,
             fatherId: reference.fatherId,
+            familyId: reference.familyId || undefined,
         },
     });
 
@@ -77,6 +79,7 @@ export async function createMother(referenceId, newPerson) {
             ...mapToPrismaPersonData(cleanPerson(newPerson)),
             gender: "F",
             spouseId: spouseId,
+            familyId: reference?.familyId || undefined,
         },
     });
 
@@ -123,6 +126,7 @@ export async function createFather(referenceId, newPerson) {
             ...mapToPrismaPersonData(cleanPerson(newPerson)),
             gender: "M",
             spouseId: spouseId,
+            familyId: reference?.familyId || undefined,
         },
     });
 
@@ -156,6 +160,9 @@ export async function createSpouse(referenceId, newPerson) {
         data: {
             ...mapToPrismaPersonData(cleanPerson(newPerson)),
             spouseId: referenceId,
+            familyId:
+                (await prisma.person.findUnique({ where: { id: referenceId } }))?.familyId ||
+                undefined,
         },
     });
 
@@ -169,7 +176,11 @@ export async function createSpouse(referenceId, newPerson) {
 
 // Crear raíz sin relaciones
 export async function createRoot(newPerson) {
-    return await prisma.person.create({
+    const createdPerson = await prisma.person.create({
         data: mapToPrismaPersonData(cleanPerson(newPerson)),
     });
+
+    createdPerson.update({ where: { id: createdPerson.id }, data: { familyId: createdPerson.id } });
+
+    return createdPerson;
 }

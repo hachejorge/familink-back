@@ -1,7 +1,7 @@
 import { prisma } from "../db.js";
 
-export async function searchPeopleByString(searchString) {
-    if (!searchString || searchString.trim() === "") {
+export async function searchPeopleByString(searchString, familyId) {
+    if (!searchString || searchString.trim() === "" || !familyId) {
         return [];
     }
 
@@ -16,6 +16,7 @@ export async function searchPeopleByString(searchString) {
             { lastName: { contains: term, mode: "insensitive" } },
             { originPlace: { contains: term, mode: "insensitive" } },
         ],
+        AND: { familyId: familyId },
     }));
 
     return await prisma.person.findMany({

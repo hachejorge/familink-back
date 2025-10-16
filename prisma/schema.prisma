@@ -28,6 +28,7 @@ model Person {
   childrenOfMother Person[]     @relation("MotherRelation")
   spouse           Person?      @relation("SpouseRelation", fields: [spouseId], references: [id])
   spouseOf         Person?      @relation("SpouseRelation")
+  familyId         Int? // 👈 Familia del usuario
 
   User User[]
 }
@@ -40,6 +41,7 @@ model User {
   createdAt    DateTime @default(now())
   rootPersonId Int?
   rootPerson   Person?  @relation(fields: [rootPersonId], references: [id])
+  familyId     Int? // 👈 Familia del usuario
 }
 
 model CheraFamily {

@@ -137,7 +137,12 @@ router.get("/cousins2grade/:id", async (req, res) => {
 
 router.get("/birthdates", async (req, res) => {
     try {
-        const birthDates = await getBirthDatesAlive();
+        const familyId = parseInt(req.query.familyId, 10);
+        if (isNaN(familyId)) {
+            return res.status(400).json({ error: "Invalid family ID" });
+        }
+
+        const birthDates = await getBirthDatesAlive(familyId);
         res.json(birthDates);
     } catch (error) {
         console.error(error);

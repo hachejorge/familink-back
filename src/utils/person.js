@@ -263,13 +263,14 @@ async function getSecondCousins(personId) {
     }));
 }
 
-async function getBirthDatesAlive() {
-    const birhtDates = await prisma.person.findMany({
+async function getBirthDatesAlive(familyId) {
+    const birthDates = await prisma.person.findMany({
         where: {
             isAlive: true,
             birth: {
                 not: null,
             },
+            familyId: familyId,
         },
         select: {
             id: true,
@@ -283,7 +284,7 @@ async function getBirthDatesAlive() {
         },
     });
 
-    return birhtDates.map((birth) => ({
+    return birthDates.map((birth) => ({
         id: birth.id,
         firstName: birth.firstName,
         lastName: birth.lastName,

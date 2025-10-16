@@ -21,6 +21,7 @@ export async function login(req, res) {
                 username: user.username,
                 role: user.role,
                 rootPerson: user.rootPersonId,
+                familyId: user.familyId,
             },
             JWT_SECRET,
             {
