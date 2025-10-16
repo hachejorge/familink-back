@@ -33,6 +33,7 @@ async function getPersonDetails(personId) {
         fatherId: person.fatherId ?? null,
         motherId: person.motherId ?? null,
         spouseId: person.spouseId ?? null,
+        familyId: person.familyId ?? null,
 
         mother: person.mother
             ? {

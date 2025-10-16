@@ -80,6 +80,7 @@ router.get("/person-details/:id", async (req, res) => {
             spouse: details.spouse,
             siblings: siblings,
             children: children,
+            familyId: details.familyId,
         });
     } catch (error) {
         console.error(error);
